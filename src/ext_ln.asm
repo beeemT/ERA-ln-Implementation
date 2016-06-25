@@ -24,11 +24,13 @@ ergebnis: dd 0x00000000
 section .text
 
 asm_ext_ln:
-pushad
+
+push ebp
+mov ebp, esp
 finit
 
 ;init register
-fld dword [eax+4] ; eingabe
+fld dword [ebp+8] ; eingabe
 mov eax, br ;speicheradresse brueche
 mov ebx, ex ; adressierung der ln tabelle, spaeter fehlerregister
 mov esi, minus ; -1
@@ -115,6 +117,8 @@ endnorm:
 
 return:
 	finit
+	mov esp, ebp
+	pop ebp
 	ret
 
 mkneg:
