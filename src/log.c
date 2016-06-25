@@ -19,9 +19,16 @@ int main(int argc, char const *argv[])
 																printf("Error: not enough arguments");
 																return -1;
 								}
+								//format of commant: ./log numberinputs input input ...
 								int i = (int)argv[2][0];
-								if(i == 0)
+								if(i == 0) //number of inputs
 								{
+																//sampleprogram
+																//generate 5 randomfloats
+																//write randomfloats in loglist
+																//calculate results and times
+																//print tables
+																//if i has value other than 0 then same program but no randomfloats
 																i = 5;
 																float randomone = (float) rand();
 																float randomtwo = (float) rand();
@@ -41,7 +48,13 @@ int main(int argc, char const *argv[])
 																calculatelnc(resultloglistc, loglist, i, timelistc);
 																calculatelnasm(resultloglistasm, loglist, i, timelistasm);
 																printTable(loglist, resultloglistc, resultloglistasm, timelistc, timelistasm, i);
+
 																return 0;
+								}
+								if(i < 0)
+								{
+																printf("%s\n", "wrong number of inputs");
+																return -1;
 								}
 								float loglist[i];
 								float resultloglistc[i];
@@ -57,20 +70,26 @@ int main(int argc, char const *argv[])
 
 void calculatelnasm(float* resultloglist, float* loglist, int length, float* timelist)
 {
-								float* pr = resultloglist;
-								float* p = loglist;
-								float* time = timelist;
+								float* pr = resultloglist; //destination of results
+								float* p = loglist; //source of inputs
+								float* time = timelist; //table for calculationtimes
 								clock_t start, ende;
-								for(int i = 0; i < length; i++)
+								printf("%s\n", "Got to for loop");
+								for(int i = 0; i < length; i++) //length is length of tables
 								{
 																start = clock();
-																*pr = *asm_ext_ln(p);
+																printf("%s\n", "Got after startclock");
+																*pr = *asm_ext_ln(p); //call asm function for ln
+																printf("%s\n", "Got after calc");
 																ende = clock();
-																*time = (float)(ende-start);
+																printf("%s\n", "Got after endclock");
+																*time = (float)(ende-start); //calculate computationtimes
+																printf("%s\n", "Got after timecalc");
 																pr++;
 																p++;
 																time++;
 								}
+								//same for calculatelnc
 }
 
 void calculatelnc(float* resultloglist, float* loglist, int length, float* timelist)
@@ -82,7 +101,7 @@ void calculatelnc(float* resultloglist, float* loglist, int length, float* timel
 								for(int i = 0; i < length; i++)
 								{
 																start = clock();
-																*pr = log(*p);
+																*pr = log(*p); //call c function for ln
 																ende = clock();
 																*time = (float)(ende-start);
 																pr++;
@@ -100,6 +119,7 @@ void retloglist(float* loglist, char const *argv[], int argc)
 																*p = strtof(argv[x+3], NULL);
 																p++;
 								}
+								//parse input into inputtable
 }
 
 void printTable(float* loglist, float* resultloglistc, float* resultloglistasm, float* timelistc, float* timelistasm, int length)
