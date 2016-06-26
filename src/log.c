@@ -4,8 +4,10 @@
 #include <math.h>
 #include <string.h>
 
-float* asm_ext_ln(float* a);
+extern float asm_ext_ln();
+float addressInput, addressResult;
 
+float calcasm(float input);
 void calculatelnasm(float* resultloglist, float* loglist, int length, float* timelist);
 void calculatelnc(float* resultloglist, float* loglist, int length, float* timelist);
 void retloglist(float* loglist, char const *argv[], int argc);
@@ -20,7 +22,8 @@ int main(int argc, char const *argv[])
 																return -1;
 								}
 								//format of commant: ./log numberinputs input input ...
-								int i = (int)argv[2][0];
+								int i = 0;
+								sscanf(argv[1], "%i", &i);
 								if(i == 0) //number of inputs
 								{
 																//sampleprogram
@@ -74,22 +77,24 @@ void calculatelnasm(float* resultloglist, float* loglist, int length, float* tim
 								float* p = loglist; //source of inputs
 								float* time = timelist; //table for calculationtimes
 								clock_t start, ende;
-								printf("%s\n", "Got to for loop");
 								for(int i = 0; i < length; i++) //length is length of tables
 								{
 																start = clock();
-																printf("%s\n", "Got after startclock");
-																*pr = *asm_ext_ln(p); //call asm function for ln
-																printf("%s\n", "Got after calc");
+																*pr = calcasm(*p); //call asm function for ln
 																ende = clock();
-																printf("%s\n", "Got after endclock");
 																*time = (float)(ende-start); //calculate computationtimes
-																printf("%s\n", "Got after timecalc");
 																pr++;
 																p++;
 																time++;
 								}
 								//same for calculatelnc
+}
+
+float calcasm(float input)
+{
+								addressInput = input;
+								asm_ext_ln(); //call asm function for ln
+								return addressResult;
 }
 
 void calculatelnc(float* resultloglist, float* loglist, int length, float* timelist)
@@ -114,9 +119,9 @@ void calculatelnc(float* resultloglist, float* loglist, int length, float* timel
 void retloglist(float* loglist, char const *argv[], int argc)
 {
 								float* p = loglist;
-								for(int x = 0; x < argc-3; x++)
+								for(int x = 0; x < argc-2; x++)
 								{
-																*p = strtof(argv[x+3], NULL);
+																*p = strtof(argv[x+2], NULL);
 																p++;
 								}
 								//parse input into inputtable
@@ -135,14 +140,29 @@ void printTable(float* loglist, float* resultloglistc, float* resultloglistasm, 
 								char linethree[] =    "ASM-Result | ";
 								char linefour[] =     "C-Time     | ";
 								char linefive[] =     "ASM-Time   | ";
+								float pointone = 0;
+								float pointtwo = 0;
+								float pointthree = 0;
+								float pointfour = 0;
+								float pointfive = 0;
 								for(int i = 0; i < length; i++)
 								{
+																pointone = *ploglist;
+																pointtwo = *presultloglistc;
+																pointthree = *presultloglistasm;
+																pointfour = *ptimelistc;
+																pointfive = *ptimelistasm;
 																printf("%s\n", sepline);
-																printf(lineone, "%7f\n", *ploglist);
-																printf(linetwo, "%7f\n", *presultloglistc);
-																printf(linethree, "%7f\n", *presultloglistasm);
-																printf(linefour, "%7f\n", *ptimelistc);
-																printf(linefive, "%7f\n", *ptimelistasm);
+																printf("%s", lineone);
+																printf("%7f\n", pointone);
+																printf("%s", linetwo);
+																printf("%7f\n", pointtwo);
+																printf("%s", linethree);
+																printf("%7f\n", pointthree);
+																printf("%s", linefour);
+																printf("%7f\n", pointfour);
+																printf("%s", linefive);
+																printf("%7f\n", pointfive);
 																printf("%s\n", sepline);
 																ploglist++;
 																presultloglistc++;
